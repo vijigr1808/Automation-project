@@ -1,0 +1,29 @@
+---
+- name: Apply all roles to Linux inventory nodes
+  hosts: linux
+  become: true
+
+  vars:
+    # Variables for the user-n01692684 role
+    user_base_name: "user"
+    user_list: [100, 200, 300]
+    ssh_key_passphrase: ""
+    groups:
+      - cloudadmins
+      - wheel
+
+    # Variables for the datadisk-n01692684 role
+    disk_device: "/dev/sdb"
+    partitions:
+      - { number: 1, fs_type: xfs, size: 4096, mount_point: /part1 }
+      - { number: 2, fs_type: ext4, size: 5120, mount_point: /part2 }
+
+    # Variables for the webserver-n01692684 role
+    apache_package_name: "httpd"
+    web_root: "/var/www/html"
+
+  roles:
+    - profile-n01692684
+    - user-n01692684
+    - datadisk-n01692684
+    - webserver-n01692684

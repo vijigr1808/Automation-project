@@ -1,0 +1,33 @@
+- name: Create cloudadmins group
+  group:
+    name: cloudadmins
+    state: present
+
+- name: Create users and add them to groups
+  user:
+    name: "user{{ item }}"
+    groups: "cloudadmins,wheel"
+    append: true
+    state: present
+  loop:
+    - 100
+    - 200
+    - 300
+
+- name: Generate SSH keys for users
+  user:
+    name: "user{{ item }}"
+    generate_ssh_key: true
+    ssh_key_comment: "user{{ item }}@{{ ansible_fqdn }}"
+    ssh_key_passphrase: ""
+  loop:
+    - 100
+    - 200
+    - 300
+
+- name: Download private key for user100
+  fetch:
+    src: "/home/user100/.ssh/id_rsa"
+    dest: "~/user100_id_rsa"
+    flat: true
+    force: yes

@@ -1,0 +1,9 @@
+[linux]
+n01692684-vm1 ansible_host=52.228.26.10 ansible_user=n01692684 ansible_ssh_private_key_file=~/.ssh/id_rsa
+n01692684-vm2 ansible_host=52.233.28.248 ansible_user=n01692684 ansible_ssh_private_key_file=~/.ssh/id_rsa
+n01692684-vm3 ansible_host=52.228.24.243 ansible_user=n01692684 ansible_ssh_private_key_file=~/.ssh/id_rsa
+
+[all:vars]
+ansible_become=yes
+ansible_become_user=root
+ansible_become_method=sudo

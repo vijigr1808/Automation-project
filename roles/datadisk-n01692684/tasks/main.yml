@@ -1,0 +1,50 @@
+- name: Format and mount partitions
+  block:
+    - name: Unmount partitions if they are mounted
+      ansible.builtin.shell: |
+        if mount | grep -q "{{ item }}"; then
+          umount --lazy "{{ item }}"
+        fi
+      loop:
+        - /dev/sda1
+        - /dev/sdb1
+      ignore_errors: true
+
+    - name: Ensure partition is unmounted
+      ansible.builtin.mount:
+        path: "{{ item }}"
+        state: unmounted
+      loop:
+        - /dev/sda1
+        - /dev/sdb1
+      ignore_errors: true
+
+    - name: Verify partition is unmounted
+      ansible.builtin.shell:
+        cmd: mount | grep -q "{{ item }}"
+      loop:
+        - /dev/sda1
+        - /dev/sdb1
+      register: mount_status
+      failed_when: mount_status.rc == 0
+      ignore_errors: true
+
+    - name: Ensure partition is formatted as ext4
+      ansible.builtin.filesystem:
+        fstype: ext4
+        dev: "{{ item }}"
+        force: yes
+      loop:
+        - /dev/sda1
+        - /dev/sdb1
+
+    - name: Mount partition
+      ansible.builtin.mount:
+        path: /mnt/data
+        src: "{{ item }}"
+        fstype: ext4
+        state: mounted
+      loop:
+        - /dev/sda1
+        - /dev/sdb1
+

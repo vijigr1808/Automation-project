@@ -1,0 +1,20 @@
+---
+- name: Ensure /etc/profile exists
+  ansible.builtin.file:
+    path: /etc/profile
+    state: touch
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Append lines to /etc/profile
+  ansible.builtin.lineinfile:
+    path: /etc/profile
+    line: "{{ item }}"
+    state: present
+    create: yes
+    insertbefore: EOF
+  loop:
+     - "#Test block added by Ansible……<Your username>"
+     - "export TMOUT=1500" 
+

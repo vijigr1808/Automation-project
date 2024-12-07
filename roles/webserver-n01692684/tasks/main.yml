@@ -1,0 +1,21 @@
+---
+- name: Install Apache web server
+  package:
+    name: httpd
+    state: present
+
+- name: Copy FQDN files to respective nodes
+  template:
+    src: "vm{{ inventory_hostname[-1] }}.html.j2"
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: "0444"
+
+- name: Start Apache web server
+  service:
+    name: httpd
+    state: started
+    enabled: true
+  notify: restart_apache
+
